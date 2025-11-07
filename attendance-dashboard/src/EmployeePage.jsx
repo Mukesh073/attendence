@@ -424,8 +424,6 @@ function EmployeePage() {
           })}
         </div>
       </div>
-
-
     </div>
   );
 }

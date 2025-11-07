@@ -558,8 +558,7 @@ function TodayDashboard() {
               onChange={(date) => setSelectedDate(date)}
               customInput={<CustomDatePickerInput />}
               dateFormat="yyyy-MM-dd"
-              popperPlacement="top-start"
-              shouldCloseOnSelect={true}
+              popperPlacement="bottom-start"
             />
           </div>
 
