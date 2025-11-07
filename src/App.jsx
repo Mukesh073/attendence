@@ -15,7 +15,7 @@ import {
   Cell
 } from 'recharts';
 
-// The English translation is:
+
 // Note: Dates should be in YYYY-MM-DD format."
 const FESTIVAL_HOLIDAYS = [
   '2025-10-20',
@@ -24,7 +24,7 @@ const FESTIVAL_HOLIDAYS = [
 ];
 
 // -----------------------------------------------------------------
-// 2. API URL (Live API se)
+// 2. API URL (From Live API)
 // -----------------------------------------------------------------
 const API_URL_BASE = import.meta.env.VITE_API_URL;
 
@@ -32,9 +32,7 @@ const API_URL_BASE = import.meta.env.VITE_API_URL;
 // 3. Helper Functions (Time Parsing & Date Formatting)
 // -----------------------------------------------------------------
 
-// --- Helper 1: parseTime (Logic ke liye) ---
-// Yeh "11:00:00" aur "1899-12-30T...Z" dono ko samajhta hai
-// ISME KOI CHANGE NAHI HAI - YEH LOGIC KE LIYE SAHI KAAM KAR RAHA HAI
+
 function parseTime(timeStr) {
   if (!timeStr) return null;
 
@@ -42,7 +40,7 @@ function parseTime(timeStr) {
   if (typeof timeStr === 'string' && timeStr.length <= 8 && timeStr.includes(':')) {
      const [h, m, s] = timeStr.split(':');
      const date = new Date(0);
-     date.setHours(h, m, s || 0, 0); // Yeh local IST time set karta hai (Sahi hai)
+     date.setHours(h, m, s || 0, 0); // This sets local IST time (Correct)
      return date;
   }
 
@@ -51,7 +49,7 @@ function parseTime(timeStr) {
     const parsedDate = new Date(timeStr);
     if (isNaN(parsedDate.getTime())) return null;
     
-    // Yeh comparison ke liye standard UTC time set karta hai (Sahi hai)
+    // This sets standard UTC time for comparison (Correct)
     const timeOnlyDate = new Date(0);
     timeOnlyDate.setUTCHours(parsedDate.getUTCHours(), parsedDate.getUTCMinutes(), parsedDate.getUTCSeconds(), 0);
     return timeOnlyDate;
@@ -62,15 +60,15 @@ function parseTime(timeStr) {
   }
 }
 
-// --- ⭐ FIX: Helper 2: formatISOTimeString (Display ke liye) ---
-// Yeh "1899-12-30T05:10:25Z" (UTC) ko "10:40:25" (IST) banayega
+// --- ⭐ FIX: Helper 2: formatISOTimeString (For Display) ---
+// This converts "1899-12-30T05:10:25Z" (UTC) to "10:40:25" (IST)
 function formatISOTimeString(timeStr) {
   if (!timeStr) return '—';
   try {
     const dateObj = new Date(timeStr);
     if (isNaN(dateObj.getTime())) return '—';
 
-    // getUTCHours() ki jagah local getHours() ka istemal kiya gaya hai
+    // Using local getHours() instead of getUTCHours()
     const h = String(dateObj.getHours()).padStart(2, '0');
     const m = String(dateObj.getMinutes()).padStart(2, '0');
     const s = String(dateObj.getSeconds()).padStart(2, '0');
@@ -102,7 +100,7 @@ const isHoliday = (dateObj) => {
 };
 
 // --- 4. Helper Function (Advanced Data Processing - Business Logic) ---
-// (Is function mein koi change nahi hai)
+// (No changes in this function)
 function processRowData(row) {
   let totalWorkMilliseconds = 0;
   let firstCheckIn = null;
@@ -206,7 +204,7 @@ function processRowData(row) {
 }
 
 // --- 5. Custom DatePicker Input ---
-// (Koi change nahi)
+// (No changes)
 const CustomDatePickerInput = forwardRef(({ value, onClick }, ref) => (
   <h2 className="date-picker-title-button" onClick={onClick} ref={ref}>
     Employee List ({value})
@@ -216,7 +214,7 @@ const CustomDatePickerInput = forwardRef(({ value, onClick }, ref) => (
 
 
 // -----------------------------------------------------------------
-// 6. Mukhya Layout Component
+// 6. Main Layout Component
 // -----------------------------------------------------------------
 
 function Layout() {
@@ -274,7 +272,7 @@ function Layout() {
 // -----------------------------------------------------------------
 // 7. Aaj ka Dashboard Component
 // -----------------------------------------------------------------
-// (Is component mein koi change nahi)
+
 function TodayDashboard() {
   const [allData, setAllData] = useState([]);
   const [masterEmployeeList, setMasterEmployeeList] = useState([]);
@@ -287,7 +285,7 @@ function TodayDashboard() {
   const [filterType, setFilterType] = useState('present');
 
   // --- Live Data Refresh Logic ---
-  // (Koi change nahi)
+ 
   useEffect(() => {
     
     const fetchData = () => {
