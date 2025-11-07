@@ -1,0 +1,35 @@
+{
+  "data": [
+    {
+      "Name": "Mukesh Paswan",
+      "UID": "4400C85D60BF",
+      "Check-in 1": "09:30:00",
+      "Check-out 1": "18:30:10"
+    },
+    {
+      "Name": "Priyansh Singh",
+      "UID": "4400B95AC26B",
+      "Check-in 1": "11:05:00",
+      "Check-out 1": "16:00:00"
+    },
+    {
+      "Name": "Aditya Singh",
+      "UID": "4400C8C3A5EB",
+      "Check-in 1": "10:35:00",
+      "Check-out 1": "17:30:00"
+    },
+    {
+      "Name": "Vikas",
+      "UID": "4400CA54FF2B",
+      "Check-in 1": "10:15:00",
+      "Check-out 1": "14:00:00",
+      "Check-in 2": "15:00:00",
+      "Check-out 2": "18:00:00"
+    },
+    {
+      "Name": "Raaj Paswan",
+      "UID": "4400C85D60AF",
+      "Check-in 1": "09:30:15"
+    }
+  ]
+}

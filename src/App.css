@@ -1,0 +1,1348 @@
+/* --- 1. Modern Setup & Variables --- */
+:root {
+    /* Colors */
+    --primary: #3498db;
+    --primary-light: #e3f2fd;
+    --success: #2ecc71;
+    --warning: #e74c3c;
+    --text-primary: #2c3e50;
+    --text-secondary: #7f8c8d;
+    --bg-light: #f7f9fb;
+    
+    /* Shadows */
+    --card-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    --hover-shadow: 0 12px 30px rgba(52, 152, 219, 0.15);
+    
+    /* Transitions */
+    --transition: all 0.3s ease;
+    
+    /* Spacing */
+    --container-padding-desktop: 30px;
+    --container-padding-tablet: 20px;
+    --container-padding-mobile: 15px;
+    
+    /* Breakpoints */
+    --mobile: 480px;
+    --tablet: 768px;
+    --laptop: 1024px;
+    --desktop: 1200px;
+    
+    /* Border Radius */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: 
+        linear-gradient(120deg, rgba(240,244,247,0.4) 0%, rgba(255,255,255,0.4) 100%),
+        linear-gradient(300deg, rgba(238,242,246,0.4) 0%, rgba(255,255,255,0.4) 100%);
+    background-attachment: fixed;
+    color: var(--text-primary);
+    overflow-x: hidden;
+    min-height: 100vh;
+    width: 100vw;
+}
+
+.App {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    animation: fadeIn 0.5s ease-out;
+    overflow-x: hidden;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@media (min-width: 1921px) {
+.App {
+ max-width: 1800px; 
+ }
+}
+
+@media (max-width: 1920px) {
+ .App {
+        max-width: 100%;
+ }
+}
+
+@media (max-width: 1200px) {
+.App {
+         max-width: 100%; 
+         padding: var(--container-padding-tablet);
+}
+}
+
+h1 {
+    color: #2c3e50;
+    text-align: center;
+    font-weight: 700;
+}
+h2 {
+    color: #34495e;
+    border-bottom: 2px solid #ecf0f1;
+    padding-bottom: 10px;
+    margin-top: 0;
+    font-size: 1.5em;
+}
+
+
+.card {
+    background-color: #ffffff;
+    border-radius: 12px; 
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08); 
+    padding: 25px;
+    transition: box-shadow 0.3s;
+}
+
+
+.app-header {
+    display: block;
+    width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: rgba(255,255,255,0.88);
+    backdrop-filter: blur(8px) saturate(120%);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    box-shadow: 0 6px 24px rgba(0,0,0,0.06);
+    overflow: visible; /* allow dropdown to overflow without expanding layout */
+}
+
+/* Employee page header (not sticky) */
+.employee-header {
+    display: block;
+    width: 100%;
+    background: transparent;
+    padding: 10px 16px;
+    margin-top: 8px;
+    border-bottom: 0;
+}
+.employee-header h1 {
+    font-size: 1.05rem;
+    margin: 6px 0 8px;
+    text-align: center;
+}
+.employee-header .month-picker-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 14px 24px; /* compact on desktop */
+    position: relative; /* anchor for absolute-positioned mobile nav */
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.logo-wrap {
+    position: relative;
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.header-logo {
+    max-width: 100%;
+    max-height: 100%;
+    height: 48px;
+    width: auto;
+    border-radius: 8px;
+    transition: transform 0.28s ease, box-shadow 0.28s ease;
+}
+
+.logo-glow {
+    position: absolute;
+    inset: -6px;
+    border-radius: 12px;
+    background: radial-gradient(circle at 30% 30%, rgba(52,152,219,0.14), rgba(52,152,219,0.04) 40%, rgba(255,255,255,0));
+    filter: blur(8px);
+    pointer-events: none;
+    z-index: -1;
+}
+
+.header-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.header-text h1 {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.header-subtitle {
+    font-size: 0.93rem;
+    color: var(--text-secondary);
+    margin-top: 2px;
+}
+
+.nav-buttons {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+.nav-buttons .nav-button {
+    background: linear-gradient(145deg, #ffffff, #f7f9fb);
+    color: var(--text-primary);
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: transform 0.22s ease, box-shadow 0.22s ease;
+    text-decoration: none;
+    border: 1px solid rgba(0,0,0,0.06);
+    box-shadow: 0 6px 18px rgba(15,15,15,0.03);
+    position: relative;
+    overflow: hidden;
+    letter-spacing: 0.2px;
+}
+
+    /* Mobile menu button (hamburger) */
+    .mobile-menu-button {
+        display: none; /* hidden by default, shown on small screens */
+        background: transparent;
+        border: none;
+        width: 44px;
+        height: 44px;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        padding: 6px;
+    }
+    /* Inline SVG icons: show hamburger when closed, X when open */
+    .mobile-menu-button svg { color: var(--text-primary); }
+    .mobile-menu-button .hamburger-icon { display: block; }
+    .mobile-menu-button .close-icon { display: none; }
+    .mobile-menu-button.open .hamburger-icon { display: none; }
+    .mobile-menu-button.open .close-icon { display: block; }
+
+    /* Mobile nav behavior */
+    @media (max-width: 768px) {
+        .header-content {
+            padding: 12px 16px;
+        }
+        .mobile-menu-button {
+            display: flex;
+            z-index: 2200; /* ensure button sits above backdrop and menu */
+        }
+        /* Hide nav by default on mobile; show only when .open added
+           Render as a compact floating card aligned to the hamburger */
+        .nav-buttons {
+            display: none;
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 12px; /* align to right where hamburger sits */
+            left: auto;
+            width: auto;
+            min-width: 180px;
+            max-width: 340px; /* keep menu compact on wider phones */
+            background: rgba(255,255,255,0.99);
+            backdrop-filter: blur(8px);
+            flex-direction: column;
+            gap: 8px;
+            padding: 10px;
+            transform-origin: top right;
+            box-shadow: 0 18px 40px rgba(0,0,0,0.14);
+            z-index: 2000; /* ensure it overlays page content */
+            border-radius: 12px;
+            opacity: 0;
+            transform: translateY(-6px) scale(0.98);
+            transition: opacity 180ms ease, transform 180ms ease;
+        }
+        .nav-buttons.open {
+            display: flex;
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            max-height: 420px;
+            overflow: auto;
+        }
+        .nav-buttons.open {
+            max-height: 240px; /* enough for couple links */
+            padding: 12px 16px 18px;
+        }
+        .nav-buttons .nav-button {
+            width: 100%;
+            text-align: left;
+            padding: 10px 14px;
+            border-radius: 8px;
+            background: transparent; /* simple, cleaner look inside floating card */
+            box-shadow: none;
+        }
+    }
+
+/* Backdrop for mobile nav to dim background and capture outside clicks */
+.mobile-nav-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+    z-index: 1500; /* below nav (2000) but above page content */
+    transition: opacity 0.2s ease;
+    opacity: 0;
+}
+.mobile-nav-backdrop.open {
+    display: block;
+    opacity: 1;
+}
+
+.nav-buttons .nav-button::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary), #2980b9);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.nav-buttons .nav-button:hover {
+    background-color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.nav-buttons .nav-button:hover::after {
+    transform: scaleX(1);
+}
+
+.nav-buttons .nav-button.active {
+    background: linear-gradient(135deg, var(--primary) 0%, #2980b9 100%);
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+}
+
+/* --- 4. DatePicker (Title) Style --- */
+.date-picker-title-button {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    color: #34495e;
+    font-size: 1.5em; 
+    margin: 0; 
+    transition: color 0.2s;
+    padding: 5px 0;
+}
+.date-picker-title-button:hover {
+    color: #3498db; 
+}
+.calendar-icon {
+    font-size: 0.8em;
+    margin-left: 10px;
+    color: #7f8c8d;
+}
+
+/* --- 5. Modern KPI Cards --- */
+.kpi-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+    background: transparent;
+    width: 100%;
+    padding: 24px;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+@media screen and (min-width: 1921px) {
+    .kpi-container {
+        gap: 30px;
+    }
+}
+
+@media screen and (max-width: 1400px) {
+    .kpi-container {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 20px;
+    }
+}
+
+@media screen and (max-width: 1200px) {
+    .kpi-container {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+    }
+}
+
+/* For landscape tablets */
+@media screen and (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+    .kpi-container {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 15px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .kpi-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    /* Show all three KPI cards side-by-side on very small screens */
+    .kpi-container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        padding: 10px 8px;
+    }
+    .kpi-container .kpi-card {
+        min-width: 0;
+        flex: none;
+    }
+}
+
+.kpi-card {
+    background: linear-gradient(145deg, #ffffff, #f5f7fa);
+    padding: 25px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px;
+    box-shadow: 
+        0 4px 12px rgba(0,0,0,0.03),
+        0 1px 3px rgba(0,0,0,0.02);
+    border: 1px solid rgba(255,255,255,0.7);
+}
+
+.kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--primary);
+    opacity: 0;
+    transition: var(--transition);
+}
+
+.kpi-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(52, 152, 219, 0.15);
+}
+
+.kpi-card:hover::before {
+    opacity: 1;
+}
+
+.kpi-card h3 {
+    margin: 0 0 12px;
+    color: var(--text-secondary);
+    font-size: 0.9em;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.kpi-card p {
+    margin: 0;
+    font-size: 2.8em;
+    font-weight: 700;
+    color: var(--primary);
+    line-height: 1.2;
+    background: linear-gradient(135deg, var(--primary) 0%, #2980b9 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.kpi-card.kpi-good p {
+    background: linear-gradient(135deg, var(--success) 0%, #27ae60 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.kpi-card.kpi-warning p {
+    background: linear-gradient(135deg, var(--warning) 0%, #c0392b 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* --- 6. मुख्य लेआउट (ग्रिड) --- */
+.main-content {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+    gap: 24px;
+    flex: 1;
+    background: transparent;
+    padding: 24px;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* --- 7. Chart and Table Containers with Responsive Design --- */
+.chart-container {
+    grid-column: 1 / 2;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 250px);
+    min-width: 0;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    padding: 15px;
+}
+
+.table-container {
+    grid-column: 2 / 3;
+    background: white;
+    height: calc(100vh - 250px);
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    padding: 15px;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.table-container > * {
+    min-width: 0;
+    width: 100%;
+}
+
+/* Responsive Layout */
+@media screen and (max-width: 1400px) {
+    .main-content {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .main-content {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .chart-container,
+    .table-container {
+        grid-column: 1 / -1;
+        padding: 20px;
+        min-height: auto;
+    }
+
+    .chart-container {
+        height: 500px;
+    }
+    
+    .table-container {
+        height: auto;
+        min-height: 600px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .main-content {
+        gap: 15px;
+    }
+    
+    .chart-container,
+    .table-container {
+        padding: 12px;
+    }
+
+    /* Make chart and table stack and use auto heights on small screens */
+    .chart-container {
+        height: auto;
+        min-height: 200px;
+        padding: 12px;
+    }
+
+    .table-container {
+        min-height: auto;
+        margin: 0;
+        border-radius: var(--radius-lg);
+        padding: 12px;
+    }
+}
+
+/* For landscape tablets */
+@media screen and (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+    .main-content {
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+}
+.no-data-message {
+    height: 350px; 
+    display: flex;
+    flex-direction: column; 
+    justify-content: center;
+    align-items: center;
+    color: #7f8c8d;
+    font-size: 1.1em; 
+    background-color: #f8f8f8; 
+    border-radius: 8px;
+    margin-top: 10px;
+}
+.no-data-message::before {
+    content: '📊'; 
+    font-size: 4em;
+    margin-bottom: 15px;
+    opacity: 0.6;
+}
+
+/* --- 8. सर्च बार --- */
+/* Responsive Search Bar */
+.search-container {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.search-bar {
+    width: 100%;
+    padding: 16px 24px 16px 50px;
+    border: 1px solid rgba(255,255,255,0.7);
+    border-radius: 16px;
+    font-size: 1em;
+    box-sizing: border-box;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: linear-gradient(145deg, #ffffff, #f5f7fa);
+    box-shadow: 
+        0 4px 12px rgba(0,0,0,0.03),
+        0 1px 3px rgba(0,0,0,0.02);
+    color: var(--text-primary);
+}
+
+.search-container::before {
+    content: '🔍';
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.2em;
+    color: var(--text-secondary);
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.search-bar:hover {
+    border-color: #e1e8ef;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.search-bar:focus {
+    border-color: var(--primary);
+    outline: none;
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.1);
+}
+
+@media (max-width: 768px) {
+    .search-bar {
+        padding: 12px 15px 12px 40px;
+        font-size: 0.95em;
+    }
+    
+    .search-container::before {
+        left: 12px;
+        font-size: 1.1em;
+    }
+}
+
+/* --- 9. Modern Table Style --- */
+.table-container {
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 
+        0 4px 25px rgba(0,0,0,0.05),
+        0 1px 3px rgba(0,0,0,0.02);
+    padding: 20px;
+    position: relative;
+    border: 1px solid rgba(255,255,255,0.7);
+    backdrop-filter: blur(10px);
+}
+
+/* Responsive Table Styles */
+.table-wrapper {
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    border-radius: 6px;
+}
+
+table {
+    width: 100%;
+    min-width: 600px;
+    border-collapse: collapse;
+    border-spacing: 0;
+    background: white;
+    margin: 0;
+}
+
+/* --- Improved Table UI --- */
+.table-container .table-wrapper {
+    border-radius: 14px;
+    padding: 6px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(250,250,250,0.6));
+    box-shadow: 0 8px 30px rgba(14, 30, 37, 0.04);
+}
+
+.table-container table {
+    border-collapse: separate; /* allow rounded rows */
+    border-spacing: 0 8px; /* vertical separation between rows */
+}
+
+th {
+    position: sticky;
+    top: 0;
+    background: linear-gradient(180deg, #ffffff, #fbfdff);
+    z-index: 5;
+    padding: 10px 12px;
+    text-align: left;
+    font-size: 12px;
+    color: var(--text-secondary);
+    border-bottom: none;
+}
+
+tbody tr {
+    background: transparent;
+}
+
+tbody tr td {
+    background: white;
+    padding: 12px;
+    vertical-align: middle;
+    border: none;
+}
+
+tbody tr td:first-child, thead th:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 6;
+    background: linear-gradient(90deg,#ffffff,#fbfdff);
+    box-shadow: 2px 0 6px rgba(0,0,0,0.02);
+}
+
+/* Rounded row cards (visual separation) */
+tbody tr td:first-child {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+tbody tr td:last-child {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+/* Zebra rows via background on cells */
+tbody tr:nth-child(even) td {
+    background: #fbfdff;
+}
+
+/* Hover highlight */
+tbody tr:hover td {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(14,30,37,0.04);
+}
+
+/* Status badges inside table cells */
+.status-present, .status-absent {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-weight: 700;
+}
+.status-present { color: var(--success); background: rgba(46,204,113,0.06); border: 1px solid rgba(46,204,113,0.12); }
+.status-absent { color: #b91c1c; background: rgba(249,231,231,0.06); border: 1px solid rgba(185,28,28,0.12); }
+
+.employee-link { color: var(--text-primary); font-weight: 700; text-decoration: none; }
+.employee-link:hover { text-decoration: underline; }
+
+/* Compact cells for dense tables */
+@media (max-width: 1024px) {
+    tbody tr td { padding: 10px; font-size: 13px; }
+    th { padding: 8px 10px; }
+}
+
+/* On very small screens we already hide tables; keep mobile card spacing */
+@media (max-width: 480px) {
+    .table-container .table-wrapper { padding: 0; box-shadow: none; background: transparent; }
+}
+
+th, td {
+    border: none;
+    border-bottom: 1px solid rgba(236, 240, 241, 0.8);
+    padding: 16px;
+    text-align: left;
+    font-size: 14px;
+    transition: var(--transition);
+}
+
+@media (max-width: 1024px) {
+    th, td {
+        padding: 12px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 768px) {
+    .table-wrapper {
+        margin: 0 -15px;
+        padding: 0 15px;
+    }
+    
+    table {
+        min-width: 650px;
+    }
+    
+    th, td {
+        padding: 10px;
+    }
+}
+
+/* Optional: Hide less important columns on mobile */
+@media (max-width: 480px) {
+    .hide-on-mobile {
+        display: none;
+    }
+}
+
+/* Mobile table/list fallback */
+@media (max-width: 480px) {
+    /* hide wide desktop tables and show mobile lists */
+    .table-container table,
+    .table-wrapper table {
+        display: none;
+    }
+    .mobile-table-list,
+    .mobile-log-list {
+        display: block;
+        width: 100%;
+    }
+    .mobile-table-list .mobile-row,
+    .mobile-log-list .mobile-row {
+        margin-bottom: 12px;
+        padding: 12px;
+        border-radius: 12px;
+        background: linear-gradient(145deg, #ffffff, #fbfdff);
+        box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+    }
+    .mobile-row .mobile-row-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+    .mobile-row .employee-link { font-weight: 700; color: var(--text-primary); }
+    .mobile-row .mobile-uid { font-size: 0.85rem; color: var(--text-secondary); }
+    .mobile-row .mobile-row-stats {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        padding-bottom: 6px;
+    }
+    .mobile-row .stat-pill {
+        min-width: 64px;
+        padding: 6px 8px;
+        border-radius: 8px;
+        background: rgba(245,245,245,0.6);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        font-size: 0.85rem;
+    }
+    .mobile-row .stat-pill.present { background: rgba(46,204,113,0.08); color: var(--success); border: 1px solid rgba(46,204,113,0.12); }
+    .mobile-row .stat-pill.absent { background: rgba(249,231,231,0.08); color: #b91c1c; border: 1px solid rgba(185,28,28,0.12); }
+    .mobile-row .stat-pill.holiday { background: rgba(227,242,253,0.06); color: #0d47a1; border: 1px solid rgba(13,71,161,0.08); }
+    .mobile-row .stat-key { font-size: 0.75rem; color: var(--text-secondary); }
+    .mobile-row .stat-val { font-weight: 700; margin-top: 4px; }
+}
+
+th {
+    background-color: var(--bg-light);
+    color: var(--text-secondary);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+tbody tr {
+    transition: var(--transition);
+}
+
+tbody tr:hover {
+    background-color: var(--primary-light) !important;
+    transform: translateX(4px);
+}
+
+/* --- 10. स्टेटस बैज और रो हाइलाइट्स --- */
+
+/* रो हाइलाइटिंग */
+.row-good {
+    background-color: #f0fdf4 !important; 
+}
+.row-late-danger, .row-late-danger:hover {
+    background-color: #fff5f5 !important; 
+    color: #c0392b;
+}
+.row-late-warning, .row-early-out, .row-under-time {
+    background-color: #fffbeb !important; 
+}
+.row-checked-in {
+    background-color: #eff6ff !important; 
+}
+
+/* Modern Status Badge */
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 12px;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: var(--transition);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.status-badge::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+}
+
+/* Badge Colors with Pulse Animation */
+.row-good .status-badge {
+    background-color: #ecfdf5;
+    color: #065f46;
+}
+.row-good .status-badge::before {
+    background-color: #059669;
+    box-shadow: 0 0 0 rgba(5, 150, 105, 0.4);
+    animation: pulse 2s infinite;
+}
+
+.row-checked-in .status-badge {
+    background-color: #eff6ff;
+    color: #1e40af;
+}
+.row-checked-in .status-badge::before {
+    background-color: #3b82f6;
+    box-shadow: 0 0 0 rgba(59, 130, 246, 0.4);
+    animation: pulse 2s infinite;
+}
+
+.row-late-danger .status-badge {
+    background-color: #fef2f2;
+    color: #991b1b;
+}
+.row-late-danger .status-badge::before {
+    background-color: #dc2626;
+    box-shadow: 0 0 0 rgba(220, 38, 38, 0.4);
+    animation: pulse 2s infinite;
+}
+
+.row-late-warning .status-badge,
+.row-early-out .status-badge,
+.row-under-time .status-badge {
+    background-color: #fffbeb;
+    color: #92400e;
+}
+.row-late-warning .status-badge::before,
+.row-early-out .status-badge::before,
+.row-under-time .status-badge::before {
+    background-color: #d97706;
+    box-shadow: 0 0 0 rgba(217, 119, 6, 0.4);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 6px rgba(0, 0, 0, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+    }
+}
+
+/* --- Holiday Message Style --- */
+.holiday-message {
+  text-align: center;
+  padding: 40px;
+  background-color: #e8f5e9; 
+  border: 1px solid #c8e6c9;
+  border-radius: 12px;
+  margin-top: 30px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08); 
+}
+.holiday-message h2 {
+    color: #388e3c;
+    border-bottom: none;
+}
+.holiday-message p {
+    font-size: 1.1em;
+    color: #555;
+    margin: 10px 0;
+}
+.holiday-message .small-note {
+    font-size: 0.9em;
+    color: #777;
+    margin-top: 20px;
+}
+
+/* --- 11. Employee Page & Links --- */
+.employee-link {
+    text-decoration: none;
+    color: #2c3e50;
+    font-weight: 600;
+}
+.employee-link:hover {
+    color: #3498db;
+    text-decoration: underline;
+}
+
+.status-present {
+    color: #16a34a;
+    font-weight: 600;
+}
+.status-absent {
+    color: #b91c1c;
+    font-weight: 600;
+}
+/* --- Pehle se moujood Calendar Styles (Inhein update karein ya check karein) --- */
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 12px;
+    border: 1px solid #eef2f7;
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    background: white;
+    box-shadow: var(--card-shadow);
+    margin: 20px 0;
+    min-height: calc(100vh - 300px);
+}
+
+@media screen and (min-width: 1921px) {
+    .calendar-grid {
+        gap: 15px;
+        padding: 25px;
+    }
+}
+
+/* For landscape tablets */
+@media screen and (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+    .calendar-grid {
+        gap: 10px;
+        padding: 15px;
+        min-height: calc(100vh - 250px);
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .calendar-grid {
+        min-height: auto;
+        gap: 8px;
+        padding: 15px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .calendar-grid {
+        gap: 6px;
+        padding: 12px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .calendar-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding: 10px;
+    }
+}
+
+.calendar-header {
+  font-weight: bold;
+  padding: 10px 5px;
+  text-align: center;
+  background-color: #f4f4f4;
+  border-bottom: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+}
+
+.calendar-day {
+    border: 1px solid #eef2f7;
+    border-radius: var(--radius-sm);
+    min-height: 100px;
+    padding: 12px;
+    position: relative;
+    background-color: #ffffff;
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+}
+
+.calendar-day:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transform: translateY(-2px);
+}
+
+.calendar-day.empty {
+    background-color: var(--bg-light);
+    opacity: 0.7;
+}
+
+@media (max-width: 768px) {
+    .calendar-day {
+        min-height: 80px;
+        padding: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .calendar-day {
+        min-height: auto;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px;
+        margin-bottom: 4px;
+    }
+}
+
+.calendar-day .day-number {
+  font-weight: bold;
+  font-size: 1.2em;
+  color: #333;
+}
+
+.calendar-day .day-status {
+  font-size: 0.9em;
+  font-weight: 500;
+  margin-top: 5px;
+}
+
+.calendar-day .day-hours {
+  font-size: 0.8em;
+  color: #555;
+  margin-top: 3px;
+}
+
+/* --- Status Colors --- */
+.calendar-day.status-present { background-color: #e8f5e9; }
+.calendar-day.status-present .day-status { color: #2e7d32; }
+
+.calendar-day.status-absent { background-color: #ffebee; }
+.calendar-day.status-absent .day-status { color: #c62828; }
+
+.calendar-day.status-halfday { background-color: #fff8e1; }
+.calendar-day.status-halfday .day-status { color: #f9a825; }
+
+.calendar-day.status-holiday { background-color: #e3f2fd; }
+.calendar-day.status-holiday .day-status { color: #0d47a1; }
+
+.calendar-day.status-future {
+  background-color: #fafafa;
+  color: #aaa;
+}
+.calendar-day.status-future .day-number {
+  color: #ccc; 
+}
+
+/* Today's Date Highlight */
+.calendar-day.today .day-number {
+  background-color: #1a73e8;
+  color: white;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+
+.app-header .month-picker-container {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.month-picker-input {
+  padding: 8px 12px;
+  font-size: 1em;
+  font-weight: bold;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: center;
+  background-color: white;
+  color: #333;
+}
+
+.month-picker-input:hover {
+  border-color: #1a73e8;
+}
+.calendar-day.status-norecord {
+  background-color: #fafafa; /* Halka Grey */
+}
+.calendar-day.status-norecord .day-status {
+  color: #999; /* Grey text */
+}
+.calendar-Example.status-norecord .day-details {
+  color: #999;
+}.header-title-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem; 
+}
+
+.header-logo {
+  height: 45px; 
+  width: auto; 
+}
+
+
+@media (max-width: 768px) {
+  .app-header h1 {
+    font-size: 1.4rem; 
+  }
+}
+
+/* Mobile attendance list (visible on very small screens) */
+.mobile-attendance-list { display: none; }
+@media (max-width: 480px) {
+    .mobile-attendance-list {
+        display: none; /* hide duplicate mobile list; use converted calendar-grid instead */
+        padding: 12px;
+        margin: 12px;
+    }
+    .mobile-month-title {
+        margin: 0 0 8px 0;
+        font-size: 1.05rem;
+        color: var(--text-primary);
+    }
+    .mobile-day-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    .mobile-day-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 12px;
+        border-radius: 10px;
+        background: linear-gradient(180deg, #ffffff, #fbfdff);
+        border: 1px solid rgba(0,0,0,0.04);
+        box-shadow: 0 6px 14px rgba(15,15,15,0.03);
+        font-size: 0.95rem;
+    }
+    .mobile-day-left {
+        display: flex;
+        flex-direction: column;
+    }
+    .mobile-day-date {
+        font-weight: 700;
+        color: var(--text-primary);
+    }
+    .mobile-day-week {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+    }
+    .mobile-day-status {
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        padding: 6px 8px;
+        border-radius: 8px;
+    }
+    /* status colors */
+    .mobile-day-item.status-present .mobile-day-status { color: var(--success); background: rgba(46, 204, 113, 0.08); border: 1px solid rgba(46,204,113,0.12); }
+    .mobile-day-item.status-checkedin .mobile-day-status { color: var(--success); background: rgba(46, 204, 113, 0.08); border: 1px solid rgba(46,204,113,0.12); }
+    .mobile-day-item.status-absent .mobile-day-status { color: #b91c1c; background: rgba(249, 231, 231, 0.08); border: 1px solid rgba(185,28,28,0.12); }
+    .mobile-day-item.status-halfday .mobile-day-status { color: #f39c12; background: rgba(255,248,225,0.06); border: 1px solid rgba(243,156,18,0.08); }
+    .mobile-day-item.status-holiday .mobile-day-status { color: #0d47a1; background: rgba(227,242,253,0.06); border: 1px solid rgba(13,71,161,0.08); }
+    .mobile-day-item.status-future .mobile-day-status { color: #999; background: rgba(250,250,250,0.04); border: 1px solid rgba(0,0,0,0.03); }
+    .mobile-day-item.status-norecord .mobile-day-status { color: #777; background: rgba(245,245,245,0.04); border: 1px solid rgba(0,0,0,0.03); }
+
+    /* Make the calendar grid a vertical list on very small screens (single-line per day) */
+    .calendar-grid { display: flex !important; flex-direction: column; gap: 8px; }
+    .calendar-day { display: flex; flex-direction: row; align-items: center; justify-content: space-between; padding: 10px 12px; min-height: auto; }
+    .calendar-day .day-number { font-weight: 700; margin-right: 12px; }
+    .calendar-day .day-status { display: inline-block; padding: 6px 8px; border-radius: 8px; font-weight: 700; text-transform: uppercase; }
+}
+
+/* small-screen badge colors for calendar grid */
+@media (max-width: 480px) {
+    .calendar-day.status-present .day-status { color: var(--success); background: rgba(46,204,113,0.08); border: 1px solid rgba(46,204,113,0.12); }
+    .calendar-day.status-checkedin .day-status { color: var(--success); background: rgba(46,204,113,0.08); border: 1px solid rgba(46,204,113,0.12); }
+    .calendar-day.status-absent .day-status { color: #b91c1c; background: rgba(249,231,231,0.08); border: 1px solid rgba(185,28,28,0.12); }
+    .calendar-day.status-halfday .day-status { color: #f39c12; background: rgba(255,248,225,0.06); border: 1px solid rgba(243,156,18,0.08); }
+    .calendar-day.status-holiday .day-status { color: #0d47a1; background: rgba(227,242,253,0.06); border: 1px solid rgba(13,71,161,0.08); }
+    .calendar-day.status-norecord .day-status { color: #777; background: rgba(245,245,245,0.04); border: 1px solid rgba(0,0,0,0.03); }
+    /* Hide future rows on very small screens */
+    .calendar-day.status-future { display: none; }
+}
+
+/* hide weekday header (Sun..Sat) on very small screens as requested */
+@media (max-width: 480px) {
+    .calendar-header { display: none; }
+}
