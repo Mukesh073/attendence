@@ -120,9 +120,25 @@ function AttendanceLog() {
           <thead>
             <tr>
               {headers.length > 0 ? (
-                 headers.map(header => <th key={header}>{header}</th>)
+                 (() => {
+                   const uniqueHeaders = [];
+                   const dateHeaders = [];
+                   
+                   headers.forEach(header => {
+                     if (/^\d{4}-\d{2}-\d{2}$/.test(header)) {
+                       dateHeaders.push(header);
+                     } else {
+                       uniqueHeaders.push(header);
+                     }
+                   });
+                   
+                   return [
+                     ...uniqueHeaders.map(header => <th key={header}>{header}</th>),
+                     ...dateHeaders.map(header => <th key={header} style={{minWidth: '60px'}}></th>)
+                   ];
+                 })()
               ) : (
-                <th>No Data</th> // Agar header na milen
+                <th>No Data</th>
               )}
             </tr>
           </thead>
@@ -141,14 +157,35 @@ function AttendanceLog() {
                   {headers.map(header => (
                     <td
                       key={header}
-                      className={row[header] === 'P' ? 'status-present' : row[header] === 'A' ? 'status-absent' : ''}
+                      className={
+                        row[header] === 'P' || row[header] === 'Present' ? 'status-present' : 
+                        row[header] === 'A' || row[header] === 'Absent' ? 'status-absent' : 
+                        row[header] === 'H' || row[header] === 'Holiday' ? 'status-holiday' : ''
+                      }
+                      style={{ textAlign: 'center', fontWeight: 'bold' }}
                     >
                       {header === 'Name' ? (
                         <Link to={`/employee/${row.UID}`} className="employee-link">
                           {row[header]}
                         </Link>
-                      ) : (
+                      ) : header === 'UID' ? (
                         row[header]
+                      ) : /^\d{4}-\d{2}-\d{2}$/.test(header) ? (
+                        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: '12px'}}>
+                          <div style={{fontWeight: 'bold', marginBottom: '2px'}}>
+                            {new Date(header).getDate()}
+                          </div>
+                          <div style={{fontSize: '11px'}}>
+                            {row[header] === 'P' || row[header] === 'Present' ? 'Present' :
+                             row[header] === 'A' || row[header] === 'Absent' ? 'Absent' :
+                             row[header] === 'H' || row[header] === 'Holiday' ? 'Holiday' :
+                             row[header] === 'HD' ? 'Half Day' :
+                             row[header] === 'S' || new Date(header).getDay() === 0 ? 'Sunday' :
+                             row[header] || '-'}
+                          </div>
+                        </div>
+                      ) : (
+                        row[header] || '-'
                       )}
                     </td>
                   ))}

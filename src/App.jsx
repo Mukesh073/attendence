@@ -569,13 +569,14 @@ function TodayDashboard() {
             // --- ⭐ FIX: Search bar typo theek kiya ---
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <table>
-            <thead>
-              <tr>
-                {tableHeaders.map(header => <th key={header}>{header}</th>)}
-              </tr>
-            </thead>
-            <tbody>
+          <div className="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  {tableHeaders.map(header => <th key={header}>{header}</th>)}
+                </tr>
+              </thead>
+              <tbody>
               {loading ? (
                 <tr><td colSpan={tableHeaders.length}>Loading...</td></tr>
               ) : filteredData.length === 0 && !isCurrentDayHoliday ? (
@@ -635,8 +636,9 @@ function TodayDashboard() {
                   </tr>
                 ))
               )}
-            </tbody>
-          </table>
+              </tbody>
+            </table>
+          </div>
           {/* Mobile-friendly list for table (visible on very small screens) */}
           <div className="mobile-table-list">
             {loading ? (

@@ -1067,11 +1067,33 @@ tbody tr:hover {
 
 .status-present {
     color: #16a34a;
-    font-weight: 600;
+    font-weight: 700;
+    background-color: #f0fdf4;
+    border-radius: 4px;
+    padding: 4px 8px;
 }
 .status-absent {
     color: #b91c1c;
-    font-weight: 600;
+    font-weight: 700;
+    background-color: #fef2f2;
+    border-radius: 4px;
+    padding: 4px 8px;
+}
+.status-holiday {
+    color: #0d47a1;
+    font-weight: 700;
+    background-color: #e3f2fd;
+    border-radius: 4px;
+    padding: 4px 8px;
+}
+
+/* Date header styling */
+th small {
+    font-size: 10px;
+    color: #666;
+    font-weight: normal;
+    display: block;
+    margin-top: 2px;
 }
 /* --- Pehle se moujood Calendar Styles (Inhein update karein ya check karein) --- */
 
@@ -1086,6 +1108,9 @@ tbody tr:hover {
     box-shadow: var(--card-shadow);
     margin: 20px 0;
     min-height: calc(100vh - 300px);
+    max-height: 80vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 @media screen and (min-width: 1921px) {
