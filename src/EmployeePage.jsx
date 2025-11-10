@@ -258,6 +258,16 @@ function EmployeePage() {
                 dayInfo.status = 'Absent';
                 absentCount++;
               } 
+              else if (masterStatus === 'L' || masterStatus === 'Leave') {
+                dayInfo.status = 'Leave';
+              }
+              else if (masterStatus === 'WFH' || masterStatus === 'Work From Home') {
+                dayInfo.status = 'Work From Home';
+                presentCount++;
+              }
+              else if (masterStatus && masterStatus.length > 3) {
+                dayInfo.status = masterStatus; // Festival name
+              }
               else if (masterStatus === 'P') { 
                 dayInfo.status = 'Absent';
                 absentCount++;
@@ -394,7 +404,10 @@ function EmployeePage() {
             else if (day.status === 'Absent') shortLabel = 'A';
             else if (day.status === 'Half Day') shortLabel = 'H';
             else if (day.status === 'Holiday') shortLabel = 'HOL';
+            else if (day.status === 'Leave') shortLabel = 'L';
+            else if (day.status === 'Work From Home') shortLabel = 'WFH';
             else if (day.status === 'Future') shortLabel = 'F';
+            else if (day.status && day.status.length > 3) shortLabel = day.status.substring(0, 3).toUpperCase();
 
             return (
               <div key={day.dateString} className={`calendar-day ${statusClass}`}>

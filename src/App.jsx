@@ -373,9 +373,14 @@ function TodayDashboard() {
     const presentUIDs = new Set(allData.map(row => row.UID));
     const absentList = masterEmployeeList.filter(masterRow => !presentUIDs.has(masterRow.UID));
 
+    const wfhCount = masterEmployeeList.filter(masterRow => {
+      const status = masterRow.Status || masterRow[formatDate(selectedDate)];
+      return status === 'WFH' || status === 'Work From Home';
+    }).length;
+    
     const totalRoster = masterEmployeeList.length;
-    const present = allData.length;
-    const absent = absentList.length;
+    const present = allData.length + wfhCount;
+    const absent = masterEmployeeList.length - allData.length - wfhCount;
 
     if (allData.length === 0 && totalRoster > 0) {
         return { totalRoster, present: 0, absent: totalRoster, onTime: 0, exceptions: 0, avgHours: 0 };
@@ -390,13 +395,48 @@ function TodayDashboard() {
     return { totalRoster, present, absent, onTime, exceptions, avgHours };
   }, [allData, masterEmployeeList, loading, isCurrentDayHoliday]);
 
-  // --- (filteredData logic unchanged) ---
+  // --- (filteredData logic with WFH support) ---
   const filteredData = useMemo(() => {
     let dataToShow = [];
     const presentUIDs = new Set(allData.map(row => row.UID));
     
+    const dateKey = formatDate(selectedDate);
+    
+    const wfhList = masterEmployeeList
+      .filter(masterRow => {
+        const status = masterRow[dateKey];
+        return status === 'WFH' || status === 'Work From Home';
+      })
+      .map(wfhRow => ({
+        ...wfhRow,
+        rowPriorityStatus: 'Work From Home',
+        rowClass: 'row-wfh',
+        totalHours: 0,
+        barFillColor: '#41ec16',
+      }));
+    
+    const leaveList = masterEmployeeList
+      .filter(masterRow => {
+        const status = masterRow[dateKey];
+        return status === 'L' || status === 'Leave';
+      })
+      .map(leaveRow => ({
+        ...leaveRow,
+        rowPriorityStatus: 'Leave',
+        rowClass: 'row-leave',
+        totalHours: 0,
+        barFillColor: '#f5f51c',
+      }));
+    
+    const wfhUIDs = new Set(wfhList.map(row => row.UID));
+    const leaveUIDs = new Set(leaveList.map(row => row.UID));
+    
     const absentList = masterEmployeeList
-      .filter(masterRow => !presentUIDs.has(masterRow.UID))
+      .filter(masterRow => 
+        !presentUIDs.has(masterRow.UID) && 
+        !wfhUIDs.has(masterRow.UID) && 
+        !leaveUIDs.has(masterRow.UID)
+      )
       .map(absentRow => ({
         ...absentRow,
         rowPriorityStatus: 'Absent',
@@ -416,7 +456,7 @@ function TodayDashboard() {
     } else {
         switch (filterType) {
             case 'present':
-                dataToShow = allData;
+                dataToShow = [...allData, ...wfhList, ...leaveList];
                 break;
             case 'onTime':
                 dataToShow = allData.filter(row => row.rowClass === 'row-good');
@@ -428,10 +468,10 @@ function TodayDashboard() {
                 dataToShow = absentList;
                 break;
             case 'all_roster':
-                dataToShow = [...allData, ...absentList];
+                dataToShow = [...allData, ...absentList, ...wfhList, ...leaveList];
                 break;
             default:
-                dataToShow = allData;
+                dataToShow = [...allData, ...wfhList, ...leaveList];
         }
     }
     
@@ -443,7 +483,7 @@ function TodayDashboard() {
     
     return dataToShow;
 
-  }, [allData, masterEmployeeList, filterType, searchTerm, isCurrentDayHoliday]);
+  }, [allData, masterEmployeeList, filterType, searchTerm, isCurrentDayHoliday, selectedDate]);
 
 
   // --- (Dynamic Table Headers Logic unchanged) ---
@@ -463,6 +503,12 @@ function TodayDashboard() {
     });
 
     if(filterType === 'absent' || isCurrentDayHoliday || (allData.length === 0 && filteredData.length > 0)) {
+      return ["Name", "Status"];
+    }
+    
+    // Check if we have WFH employees without check-in data
+    const hasWFHOnly = filteredData.some(row => row.rowPriorityStatus === 'Work From Home');
+    if(hasWFHOnly && allData.length === 0) {
       return ["Name", "Status"];
     }
     
@@ -503,7 +549,7 @@ function TodayDashboard() {
   // --- Normal Dashboard Return ---
   return (
     <>
-      {/* (KPI Cards unchanged) */}
+      {/* KPI Cards with Leave and WFH */}
       <div className="kpi-container">
         <div className="kpi-card" onClick={() => { setFilterType('all_roster'); setSearchTerm(''); }}>
           <h3>Total Employees</h3><p>{loading ? '...' : kpiData.totalRoster}</p>
@@ -514,6 +560,7 @@ function TodayDashboard() {
         <div className="kpi-card kpi-warning" onClick={() => { setFilterType('absent'); setSearchTerm(''); }}>
           <h3>Absent</h3><p>{loading ? '...' : kpiData.absent}</p>
         </div>
+
         <div className="kpi-card kpi-good" onClick={() => { setFilterType('onTime'); setSearchTerm(''); }}>
           <h3>On Time</h3><p>{loading ? '...' : kpiData.onTime}</p>
         </div>

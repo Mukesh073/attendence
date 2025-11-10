@@ -37,7 +37,28 @@ function AttendanceLog() {
       .then(response => response.json())
       .then(data => {
         if (data.error) throw new Error(data.error);
-        setLogData(data.data || []); 
+        
+        // Group rows by name and merge their data
+        const rawData = data.data || [];
+        const groupedData = {};
+        
+        rawData.forEach(row => {
+          const name = row.Name;
+          if (!groupedData[name]) {
+            groupedData[name] = { ...row };
+          } else {
+            // Merge attendance data, keeping non-empty values
+            Object.keys(row).forEach(key => {
+              if (key !== 'Name' && key !== 'UID') {
+                if (!groupedData[name][key] || groupedData[name][key] === '-' || groupedData[name][key] === '') {
+                  groupedData[name][key] = row[key];
+                }
+              }
+            });
+          }
+        });
+        
+        setLogData(Object.values(groupedData));
         setLoading(false);
       })
       .catch(err => {
@@ -47,7 +68,7 @@ function AttendanceLog() {
   }, [selectedMonth]); // ⭐ जब 'selectedMonth' बदलेगा, यह दोबारा चलेगा
 
   // --- ⭐ 4. Render Logic ---
-  const headers = logData.length > 0 ? Object.keys(logData[0]) : [];
+  const headers = logData.length > 0 ? Object.keys(logData[0]).filter(h => h !== 'UID') : [];
 
   return (
     <div className="table-container card">
@@ -116,27 +137,20 @@ function AttendanceLog() {
       
       {/* Table ko scrollable banayein */}
       <div style={{ overflowX: 'auto', maxWidth: '100%' }}>
-        <table>
+        <table style={{borderSpacing: '3px', borderCollapse: 'separate'}}>
           <thead>
             <tr>
               {headers.length > 0 ? (
-                 (() => {
-                   const uniqueHeaders = [];
-                   const dateHeaders = [];
-                   
-                   headers.forEach(header => {
-                     if (/^\d{4}-\d{2}-\d{2}$/.test(header)) {
-                       dateHeaders.push(header);
-                     } else {
-                       uniqueHeaders.push(header);
-                     }
-                   });
-                   
-                   return [
-                     ...uniqueHeaders.map(header => <th key={header}>{header}</th>),
-                     ...dateHeaders.map(header => <th key={header} style={{minWidth: '60px'}}></th>)
-                   ];
-                 })()
+                 headers.map((header, index) => {
+                   // If header is a date (YYYY-MM-DD format), show only day number
+                   if (/^\d{4}-\d{2}-\d{2}$/.test(header)) {
+                     const date = new Date(header);
+                     return <th key={header} style={{width: '20px', minWidth: '20px', textAlign: 'center'}}>{date.getDate()}</th>;
+                   }
+                   // Add gap after Name column
+                   const style = header === 'Name' ? {paddingRight: '50px'} : {};
+                   return <th key={header} style={style}>{header}</th>;
+                 })
               ) : (
                 <th>No Data</th>
               )}
@@ -154,41 +168,42 @@ function AttendanceLog() {
             ) : (
               logData.map((row) => (
                 <tr key={row.UID}>
-                  {headers.map(header => (
-                    <td
-                      key={header}
-                      className={
-                        row[header] === 'P' || row[header] === 'Present' ? 'status-present' : 
-                        row[header] === 'A' || row[header] === 'Absent' ? 'status-absent' : 
-                        row[header] === 'H' || row[header] === 'Holiday' ? 'status-holiday' : ''
+                  {headers.map(header => {
+                    let cellStyle = {};
+                    const value = row[header];
+                    
+                    // Add colors for status values
+                    if (/^\d{4}-\d{2}-\d{2}$/.test(header)) {
+                      if (value === 'P' || value === 'Present') {
+                        cellStyle = { backgroundColor: '#28d751ff', color: '#121312ff' };
+                      } else if (value === 'A' || value === 'Absent') {
+                        cellStyle = { backgroundColor: '#e81c11ff', color: '#14100fff' };
+                      } else if (value === 'L' || value === 'Leave') {
+                        cellStyle = { backgroundColor: '#f5f51cff', color: '#111010ff' };
+                      } else if (value === 'WFH' || value === 'Work From Home') {
+                        cellStyle = { backgroundColor: '#41ec16ff', color: '#131415ff' };
+                      } else if (value === 'H' || value === 'Holiday') {
+                        cellStyle = { backgroundColor: '#d1ecf1', color: '#0c5460' };
+                      } else if (value === 'HD' || value === 'Half Day') {
+                        cellStyle = { backgroundColor: '#26e6d9ff', color: '#0d0d0fff' };
                       }
-                      style={{ textAlign: 'center', fontWeight: 'bold' }}
-                    >
-                      {header === 'Name' ? (
-                        <Link to={`/employee/${row.UID}`} className="employee-link">
-                          {row[header]}
-                        </Link>
-                      ) : header === 'UID' ? (
-                        row[header]
-                      ) : /^\d{4}-\d{2}-\d{2}$/.test(header) ? (
-                        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: '12px'}}>
-                          <div style={{fontWeight: 'bold', marginBottom: '2px'}}>
-                            {new Date(header).getDate()}
-                          </div>
-                          <div style={{fontSize: '11px'}}>
-                            {row[header] === 'P' || row[header] === 'Present' ? 'Present' :
-                             row[header] === 'A' || row[header] === 'Absent' ? 'Absent' :
-                             row[header] === 'H' || row[header] === 'Holiday' ? 'Holiday' :
-                             row[header] === 'HD' ? 'Half Day' :
-                             row[header] === 'S' || new Date(header).getDay() === 0 ? 'Sunday' :
-                             row[header] || '-'}
-                          </div>
-                        </div>
-                      ) : (
-                        row[header] || '-'
-                      )}
-                    </td>
-                  ))}
+                    }
+                    
+                    const isDateColumn = /^\d{4}-\d{2}-\d{2}$/.test(header);
+                    const textAlign = header === 'Name' ? 'left' : 'center';
+                    
+                    return (
+                      <td key={header} style={{...cellStyle, textAlign}}>
+                        {header === 'Name' ? (
+                          <Link to={`/employee/${row.UID}`} className="employee-link">
+                            {row[header]}
+                          </Link>
+                        ) : (
+                          row[header] || '-'
+                        )}
+                      </td>
+                    );
+                  })}
                 </tr>
               ))
             )}
