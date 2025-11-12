@@ -66,7 +66,7 @@ body {
 }
 @media (min-width: 1921px) {
 .App {
- max-width: 1800px; 
+max-width: 1800px; 
  }
 }
 
@@ -922,6 +922,16 @@ th, td {
     .mobile-row .stat-pill.holiday { background: rgba(227,242,253,0.06); color: #0d47a1; border: 1px solid rgba(13,71,161,0.08); }
     .mobile-row .stat-key { font-size: 0.75rem; color: var(--text-secondary); }
     .mobile-row .stat-val { font-weight: 700; margin-top: 4px; }
+    
+    /* Mobile row color classes */
+    .mobile-row.row-good { background: linear-gradient(145deg, #f0fdf4, #ecfdf5) !important; }
+    .mobile-row.row-late-danger { background: linear-gradient(145deg, #fff5f5, #fef2f2) !important; }
+    .mobile-row.row-late-warning { background: linear-gradient(145deg, #fffbeb, #fef3c7) !important; }
+    .mobile-row.row-checked-in { background: linear-gradient(145deg, #eff6ff, #dbeafe) !important; }
+    .mobile-row.row-leave { background: linear-gradient(145deg, #fff3e0, #fef3c7) !important; }
+    .mobile-row.row-wfh { background: linear-gradient(145deg, #f3e5f5, #fce7f3) !important; }
+    .mobile-row.row-early-out { background: linear-gradient(145deg, #fffbeb, #fef3c7) !important; }
+    .mobile-row.row-under-time { background: linear-gradient(145deg, #fffbeb, #fef3c7) !important; }
 }
 
 th {
@@ -990,6 +1000,65 @@ tbody tr:hover {
     width: 6px;
     height: 6px;
     border-radius: 50%;
+}
+
+/* Status badge colors based on row class */
+.row-good .status-badge {
+    background-color: #ecfdf5;
+    color: #065f46;
+}
+.row-good .status-badge::before {
+    background-color: #059669;
+}
+
+.row-late-danger .status-badge {
+    background-color: #fef2f2;
+    color: #991b1b;
+}
+.row-late-danger .status-badge::before {
+    background-color: #dc2626;
+}
+
+.row-late-warning .status-badge {
+    background-color: #fffbeb;
+    color: #92400e;
+}
+.row-late-warning .status-badge::before {
+    background-color: #d97706;
+}
+
+.row-checked-in .status-badge {
+    background-color: #eff6ff;
+    color: #1e40af;
+}
+.row-checked-in .status-badge::before {
+    background-color: #3b82f6;
+}
+
+.row-wfh .status-badge {
+    background-color: #f3e5f5;
+    color: #7b1fa2;
+}
+.row-wfh .status-badge::before {
+    background-color: #9c27b0;
+}
+
+.row-leave .status-badge {
+    background-color: #fff3e0;
+    color: #f57c00;
+}
+.row-leave .status-badge::before {
+    background-color: #ff9800;
+}
+
+.row-early-out .status-badge,
+.row-under-time .status-badge {
+    background-color: #fffbeb;
+    color: #92400e;
+}
+.row-early-out .status-badge::before,
+.row-under-time .status-badge::before {
+    background-color: #d97706;
 }
 
 /* Badge Colors with Pulse Animation */

@@ -39,8 +39,8 @@ function parseTime(timeStr) {
   // Case 1: Simple time string "HH:mm:ss"
   if (typeof timeStr === 'string' && timeStr.length <= 8 && timeStr.includes(':')) {
      const [h, m, s] = timeStr.split(':');
-     const date = new Date(0);
-     date.setHours(h, m, s || 0, 0); // This sets local IST time (Correct)
+     const date = new Date(2000, 0, 1); // Use consistent date for comparison
+     date.setHours(parseInt(h), parseInt(m), parseInt(s || 0), 0);
      return date;
   }
 
@@ -50,8 +50,8 @@ function parseTime(timeStr) {
     if (isNaN(parsedDate.getTime())) return null;
     
     // This sets standard UTC time for comparison (Correct)
-    const timeOnlyDate = new Date(0);
-    timeOnlyDate.setUTCHours(parsedDate.getUTCHours(), parsedDate.getUTCMinutes(), parsedDate.getUTCSeconds(), 0);
+    const timeOnlyDate = new Date(2000, 0, 1);
+    timeOnlyDate.setHours(parsedDate.getHours(), parsedDate.getMinutes(), parsedDate.getSeconds(), 0);
     return timeOnlyDate;
     
   } catch (e) {
@@ -135,16 +135,16 @@ function processRowData(row) {
 
   if (status === 'Checked In') {
     const lateBy_11_00 = parseTime("11:00:00");
+    const lateBy_10_30 = parseTime("10:30:00");
     if (firstCheckIn && firstCheckIn.getTime() > lateBy_11_00.getTime()) {
       rowPriorityStatus = 'Late (After 11:00)';
       barFillColor = '#c0392b';
       rowClass = 'row-late-danger';
-    } else if (firstCheckIn && firstCheckIn.getTime() > parseTime("10:30:00").getTime()) {
+    } else if (firstCheckIn && firstCheckIn.getTime() > lateBy_10_30.getTime()) {
       rowPriorityStatus = 'Late (After 10:30)';
       barFillColor = '#e67e22';
       rowClass = 'row-late-warning';
     } else {
-      
       rowPriorityStatus = 'Checked In';
       barFillColor = '#34db69ff';
       rowClass = 'row-checked-in';
@@ -456,7 +456,7 @@ function TodayDashboard() {
     } else {
         switch (filterType) {
             case 'present':
-                dataToShow = [...allData, ...wfhList, ...leaveList];
+                dataToShow = [...allData, ...wfhList, ...leaveList, ...absentList];
                 break;
             case 'onTime':
                 dataToShow = allData.filter(row => row.rowClass === 'row-good');
@@ -471,7 +471,7 @@ function TodayDashboard() {
                 dataToShow = [...allData, ...absentList, ...wfhList, ...leaveList];
                 break;
             default:
-                dataToShow = [...allData, ...wfhList, ...leaveList];
+                dataToShow = [...allData, ...wfhList, ...leaveList, ...absentList];
         }
     }
     
@@ -613,7 +613,6 @@ function TodayDashboard() {
             placeholder="Search by name..."
             className="search-bar"
             value={searchTerm}
-            // --- ⭐ FIX: Search bar typo theek kiya ---
             onChange={(e) => setSearchTerm(e.target.value)}
           />
           <div className="table-wrapper">
@@ -664,7 +663,6 @@ function TodayDashboard() {
                       }
 
                       // Case 4: Check-in / Check-out columns
-                      // Yahan hum formatter ka istemal karenge (Ab yeh local time dikhayega)
                       if (header.startsWith('Check-in') || header.startsWith('Check-out')) {
                         return (
                           <td key={header}>
